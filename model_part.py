@@ -12,8 +12,8 @@ def _variable_with_weight_decay(name, shape, stddev, wd, trainable=True):
     return var
 
 
-def _variable_on_gpu(name, shape, initializer):
-    var = tf.get_variable(name, shape, initializer=initializer)
+def _variable_on_gpu(name, shape, initializer, trainable=trainable):
+    var = tf.get_variable(name, shape, initializer=initializer, trainable=trainable)
     return var
 
 
@@ -29,7 +29,7 @@ def conv2d(scope_name, inputs, shape, bias_shape, stride, padding='VALID', wd=0.
             trainable=trainable
         )
         conv = tf.nn.conv2d(inputs, kernel, stride, padding=padding)
-        biases = _variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1))
+        biases = _variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1), trainable=trainable)
         bias = tf.nn.bias_add(conv, biases)
         conv_ = tf.nn.relu(bias, name=scope.name)
         return conv_
@@ -47,6 +47,6 @@ def fc(scope_name, inputs, shape, bias_shape, wd=0.04, reuse=False, trainable=Tr
             wd=wd,
             trainable=trainable
         )
-        biases = _variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1))
+        biases = _variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1), trainable=trainable)
         fc = tf.nn.relu_layer(flat, weights, biases, name=scope.name)
         return fc
