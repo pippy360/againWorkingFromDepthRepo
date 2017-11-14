@@ -15,6 +15,7 @@ BATCH_SIZE = 8
 TRAIN_FILE = "train.csv"
 COARSE_DIR = "coarse"
 REFINE_DIR = "refine"
+ALL_DIR = "all"
 
 REFINE_TRAIN = True
 FINE_TUNE = True
@@ -67,6 +68,7 @@ def train():
                     refine_params[variable_name] = variable
         # define saver
         print coarse_params
+        saver_all = tf.train.Saver()
         saver_coarse = tf.train.Saver(coarse_params)
         if REFINE_TRAIN:
             saver_refine = tf.train.Saver(refine_params)
@@ -112,6 +114,8 @@ def train():
                 else:
                     coarse_checkpoint_path = COARSE_DIR + '/model.ckpt'
                     saver_coarse.save(sess, coarse_checkpoint_path, global_step=step)
+                all_checkpoint_path = ALL_DIR + '/model.ckpt'
+                saver_all.save(sess, all_checkpoint_path, global_step=step)
         coord.request_stop()
         coord.join(threads)
         sess.close()
@@ -120,6 +124,8 @@ def train():
 def main(argv=None):
     if not gfile.Exists(COARSE_DIR):
         gfile.MakeDirs(COARSE_DIR)
+    if not gfile.Exists(ALL_DIR):
+        gfile.MakeDirs(ALL_DIR)
     if not gfile.Exists(REFINE_DIR):
         gfile.MakeDirs(REFINE_DIR)
     train()
