@@ -17,7 +17,7 @@ COARSE_DIR = "coarse"
 REFINE_DIR = "refine"
 ALL_DIR = "all"
 
-REFINE_TRAIN = True
+REFINE_TRAIN = False 
 FINE_TUNE = True
 
 def train():
@@ -33,7 +33,7 @@ def train():
             logits = model.inference_refine(images, coarse, keep_conv, keep_hidden)
         else:
             print("coarse train.")
-            logits = model.inference(images, keep_conv, keep_hidden)
+            logits = model.inference(images, keep_conv)
         loss = model.loss(logits, depths, invalid_depths)
         train_op = op.train(loss, global_step, BATCH_SIZE)
         init_op = tf.initialize_all_variables()
