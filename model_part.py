@@ -12,7 +12,7 @@ def _variable_with_weight_decay(name, shape, stddev, wd, trainable=True):
     return var
 
 
-def _variable_on_gpu(name, shape, initializer, trainable=trainable):
+def _variable_on_gpu(name, shape, initializer, trainable=True):
     var = tf.get_variable(name, shape, initializer=initializer, trainable=trainable)
     return var
 
